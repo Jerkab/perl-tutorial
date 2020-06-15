@@ -1,0 +1,950 @@
+#+TITLE:  Initiation to Perl
+#+AUTHOR: Jerome SANCHEZ
+#+DATE: [2020-03-10 Tue]
+#+TODO: TODO WORKINGON | DONE CANCEL
+
+* Presentation
+** A scripting language
+*** Dynamic language
+    Not strong type
+    Inference typing (operations determine data type)
+    Simple and easy to program and understand
+
+*** No compilation require
+    Interpreter read and translate the source code at runtime
+
+** Regex
+   Perl is strong for text handling and parsing
+   Operator regex native to the language
+
+** Modular
+   Module for Namespace libs for avoid function name conflict
+   Extend module to "object oriented model" with "bless"
+
+** Ecosystem
+   Lots of libraries.
+   METACPAN
+
+** Example
+
+*** Running perl command line
+#+begin_src sh :results output
+perl -e 'print "hello !\n"'
+#+end_src
+
+#+RESULTS:
+: hello !
+
+*** Running perl from a file
+    #+begin_src perl :shebang "#!/usr/local/bin/perl" :results output
+    use strict;
+    use warnings;
+
+    # un commantaire
+    my $str="Hello";
+    print $str." World\n";
+
+    exit 0;
+    #+end_src
+
+    #+RESULTS:
+    : Hello World
+
+
+** Web ressource
+*** Learn Perl org
+    https://learn.perl.org/tutorials/
+
+*** Interpreter on Web
+    https://www.tutorialspoint.com/execute_perl_online.php
+
+*** PerlDoc (language documentation)
+    https://perldoc.perl.org/
+
+* Syntax and Types
+** Syntax
+*** Values and variables
+    You develop Perl programs to manipulate some kinds of data.
+    The data can be either number, characters or more complex such as list.
+    Data is held as value.
+    The below examples are values:
+
+#+begin_src perl :results output
+10
+20.2
+"Perl syntax"
+#+end_src
+    
+    To manipulate data such as changing, adding, etc., you need variables. 
+    You use a variable to store a value and through the name of the variable, you can process the value.
+    The following illustrates some variables in Perl:
+
+#+begin_src perl :results output
+$x = 10;
+$y = 20;
+$s = "Perl string";
+#+end_src
+
+*** Comments
+    In Perl, a comment begins with a hash (#) character. Perl interpreter ignores comments at both compile time and runtime. 
+    You use the comment to document the logic of your code. The code tells you what it does however comment provides information on why the code does so.
+    Comment is very important and useful to you as a programmer in order to understand the code later on, as well as other developers who will maintain your code in the future.
+
+#+begin_src perl :results output
+
+# A comments start with '#'
+$x = 10;
+$s = "Perl string"; # perl string
+
+#+end_src
+
+*** Expressions and statements
+**** Expressions
+    In Perl, an expression is anything that returns a value. 
+    The expression can be used in a larger expression or a statement.
+    The expression can be a literal number, complex expression with operators, or a function call.
+
+**** Statement
+    A statement is made up of expressions. Statement is executed by Perl at run-time. Each Perl statement must end with a semicolon (;).
+
+**** Examples
+#+begin_src perl
+
+$a=10; # Statement with 10 an expression that returns value of 10
+$b=12; # Statement with 12 an expression that returns value of 12
+
+$a + $b  # expression
+
+$a + $b; # a statement
+
+#+end_src 
+
+*** Blocks
+    A block is made up of statements wrapped in curly braces. You use blocks to organize statements in program. 
+
+#+begin_src perl
+
+{
+     $a = 1;
+     $a = $a + 1;
+     print($a);
+}
+
+#+end_src
+
+   Any variable declared inside a block has its own scope. 
+   It means the variables declared inside a block only last as long as the block is executed.
+
+*** Keywords
+    Perl has many reserved words.
+    https://learn.perl.org/docs/keywords.html
+
+** Types
+*** SCALARS
+   A scalar represent :
+   - an integer or a float
+   - a char or a string
+   - a pointer/reference
+   - or undef
+
+**** Numbers
+***** Integer
+      Integers are whole numbers that have no number after the decimal points i.e 10,  -20 or 100.
+      In Perl, integers are often expressed as decimal integers, base 10.
+
+#+begin_src perl :results output
+
+my $x = 20;
+my $y = 100;
+my $z = -200;
+my $a = 123_763_213; # represent number : 123763213
+
+my $number_decimal = 12;
+my $number_binary  = 0b1100;
+my $number_octal   = 014;
+my $number_hex     = 0xC;
+
+#+end_src
+
+***** Floating-point 
+      You use floating-point numbers to store real numbers. Perl represents floating-point numbers in two forms:
+      - Fixed point: 100.25
+      - Scientific:  +1.0025e2
+#+begin_src perl :results output
+
+my $x = 100.25;
+my $y = +1.0025e2;
+
+#+end_src
+
+**** String
+     In Perl, a string is a sequence of characters surrounded by some kinds of quotation marks.
+     A string can contain ASCII, UNICODE and escape sequences characters such as \n.
+
+    #+begin_src perl :results output
+    my $s = "Perl";
+
+    my $str_static = 'a string $s without interpolation and escaping a single quote \' \n*';
+    my $str_q      = q/a string $s without interpolation and a single quote ' \n*/;
+
+    my $str_i        = "a string $s with interpolation and a single quote ' \n";
+    my $str_qq       = qq/a string $s with interpolation and a single quote ' \n/;
+    my $str_qq_delim = qq{a string $s with interpolation and a single quote ' \n};
+
+    printf " %s\n %s", $str_q, $str_static;
+    print  "\n";
+    printf " %s %s %s",  $str_i, $str_qq, $str_qq_delim;
+#+end_src
+
+#+RESULTS:
+:  a string $s without interpolation and a single quote ' \n*
+:  a string $s without interpolation and escaping a single quote ' \n*
+:  a string Perl with interpolation and a single quote ' 
+:  a string Perl with interpolation and a single quote ' 
+:  a string Perl with interpolation and a single quote ' 
+
+**** Operator
+    - some numerical operator: + - * / ++ -- += -= /= *= %= sin cos exp log abs sqrt
+    - some string operator: . .= length chop chomp reverse ord chr lc uc substr index rindex
+**** Exercices
+    1. Add two value
+      #+begin_src perl :results output
+      my $un=1;
+      my $deux=2;
+      print $un + $deux;
+      print "\n";
+      #+end_src
+
+      #+RESULTS:
+      : 3
+
+    2. Concat two strings
+      #+begin_src perl :results output
+      my $str1="Hello";
+      my $str2="World!";
+      print $str1." ".$str2."\n";
+      #+end_src
+
+      #+RESULTS:
+      : Hello World
+   
+    3. Where is char 'e'
+      #+begin_src perl :results output
+      print index ("j'ai trouve le caractere",'e');
+      #+end_src
+
+*** List
+    A Perl list is a sequence of scalar values.
+    - List are IMMUTABLE! 
+    - You use parenthesis and comma operators to construct a list.
+    - Each value in the list is called list element.
+    - List elements are indexed and ordered. 
+    - You can refer to each element by its position.
+    NB: a list can contain differents types of element.
+#+begin_src
+()                          # Empty list
+(10, 20, 30)                # List of integers
+("this", "is", "a", "list") # List of strings
+
+(2020, "Mars", 10) # heterogene list
+qw(2020 "Mars" 10) # an other form to represent a list
+
+('a'..'d')  # Range list equivalent to ('a','b','c','d')
+
+#+end_src
+
+*** ARRAYS
+   By definition, an array is a variable that provides dynamic storage for a list.
+   - Arrays are MUTABLE
+   - An array variable begins with an at-sign ( @)
+   - Index of an array start from 0.
+
+**** Affectation
+    #+begin_src perl :shebang "#!/usr/local/bin/perl" :results output
+    use warnings;
+    use strict;
+
+    my @vide = ();                       # Empty array from list
+    my @t1 = (3,'chaine',"bonjour ici"); # Copy a list to an array
+    my ($a,$b,$c)=(3,'chaine',"bonjour ici"); # affectation of several values
+    $t1[1] = 4;                          # change second element
+    print "Tableau : @t1 \n";
+
+    my @t2 = (1,2);
+    @t1 = @t2;
+    print "Tableau : @t1 \n";
+    my ($premier, $second)= @t1; # Affectation multiple
+
+    my $count_t2 = scalar @t2; # get the number of element into an array
+
+    # Remove and append element at the head
+    my @simple_array = (1,2,3);
+    print "Simple array = @simple_array \t shift \@simple_array = ".(shift @simple_array)." \t Simple array = @simple_array \n";
+    @simple_array = (1,2,3);
+    print "Simple array = @simple_array \t unshift \@simple_array,(-1,0) = ".(unshift @simple_array, (-1,0))." \t Simple array = @simple_array \n";
+
+    # Remove and append element at the tail
+    my @simple_array = (1,2,3);
+    print "Simple array = @simple_array \t pop \@simple_array = ".(pop @simple_array)." \t Simple array = @simple_array \n";
+    @simple_array = (1,2,3);
+    print "Simple array = @simple_array \t push \@simple_array,(4,5) = ".(push @simple_array, (4,5))." \t Simple array = @simple_array \n";
+
+    #+end_src
+
+    #+RESULTS:
+    : Tableau : 3 4 bonjour ici 
+    : Tableau : 1 2 
+    : Simple array = 1 2 3 	 shift @simple_array = 1 	 Simple array = 2 3 
+    : Simple array = 1 2 3 	 unshift @simple_array,(-1,0) = 5 	 Simple array = -1 0 1 2 3 
+    : Simple array = 1 2 3 	 pop @simple_array = 3 	 Simple array = 1 2 
+    : Simple array = 1 2 3 	 push @simple_array,(4,5) = 5 	 Simple array = 1 2 3 4 5 
+
+**** Operator
+    scalar
+    join split
+    sort grep map  
+    shift unshift push pop
+
+*** HASHES
+    A Perl hash is defined by key-value pairs.
+    Perl stores elements of a hash in such an optimal way that you can look up its values based on keys very fast.
+    You must use descriptive keys to access hash’s element.
+    A hash is sometimes referred to as an associative array.
+    A hash variable must begin with a percent sign (%)
+    Each Key in hash should be unique or else it will override your value, which was assigned previously.
+**** Affectation
+   #+begin_src perl :results output
+   my %h;
+   my %h2 = ();
+   my %h3 = ( "Paul"  => "01.23.45.67.89",
+          "Virginie" => "06.06.06.06.06",
+          "Pierre"   => "unknow ..." );
+
+   my @t = ("Paul", "01.23.45.67.89", "Virginie",
+         "06.06.06.06.06", "Pierre", "unknow ...");
+   my %h4 = @t; # cast a array to a hash
+
+   # Get and change a value
+   my $valeur_paul=$h3{'Paul'};
+   $h3{'Paul'}="01.23.45.67.00";
+   print "Phone= ".$h3{'Paul'}."\n";
+
+   # Add a new key/value pir
+   $h3{'Arnaud'}="09.87.65.43.21";
+
+   # Remoe a single ke/vcalue pair
+   delete $h3{'Paul'};
+
+   #+end_src
+
+**** Operator
+    keys values each
+    exists delete
+
+* Flow control
+** If-then-else statements
+
+   #+begin_src perl :results output
+   my $age=35;
+   if ($age < 18 ) {
+     # Block
+     print "Fruit juice\n";
+   }
+   elsif ( $age > 85) {
+     # Block
+     print "A tea\n";
+   }
+   else {
+     # Block
+     print "a beer\n";
+   }
+
+   print "if true\n" if (1);
+   print "unless false\n" unless (0);
+
+   #+end_src
+
+   #+RESULTS:
+   : a beer
+   : if true
+   : unless false
+
+*** Tips
+   - 0, '' (empty string), and undef are false
+
+** Loop
+*** for
+    The Perl *for* loop statement allows you to loop over elements of a list.
+    In each iteration, you can process each element of the list separately.
+    This is why the *for* loop statement is sometimes referred to as *foreach* loop.
+
+    In Perl, the *for* and *foreach* loop are interchangeable, therefore, you can use the *foreach* keyword in where you use the *for* keyword.
+
+   #+begin_src perl :results output
+   # for C-like style
+   for( my $i=0; $i<=20; $i+=2 ) {
+     print "$i\n";
+   }
+   #+end_src
+
+   #+begin_src perl :results output
+   my @a = ('a','b','c','d');
+   foreach my $index (@a) {
+     print "$a[$index]\n";
+   }
+   #+end_src
+
+   #+begin_src perl :results output
+   my %h = (1=>'a',2=>'b',3=>'c',4=>'d');
+   foreach my $index (keys %h) {
+     print "$h{$index}\n";
+   }
+   #+end_src
+
+** while
+   The Perl while loop statement executes a code block repeatedly as long as the test condition remains true.
+   The test condition is checked at the beginning of each iteration.
+   
+   If the condition evaluates to true, the code block inside while loop executes. 
+   At the beginning of each iteration, the condition is reevaluated.
+   The loop is terminated if the condition evaluates to false.
+
+   #+begin_src perl :results output
+   my $i = 0;
+   while( $i <= 20 ) {
+     print "$i\n";
+     $i+=2;
+   }
+   #+end_src
+
+   Unlike the while statement that checks the condition at the beginning of each iteration, the do while loop statement checks the condition at the end of each iteration.
+   Because do while loop statement checks the condition at the end of each iteration, the code block inside the loop executes at least once.
+
+   #+begin_src perl :results output
+   my $i = 0;
+   do {
+     print "$i\n";
+     $i+=2;
+   } while( $i <= 20 );
+   #+end_src
+
+** Break a loop
+   - next : next element
+   - last : quit 
+   - redo : reprocess 
+
+** Exercises
+   - Print all results for (1..9) * 7
+#+begin_src perl :results output
+#+end_src
+   - Display the numbers from 1 to 10 and say if the number is odd or even.
+#+begin_src perl :results output
+#+end_src
+   - Display prime number between 1 and 100
+#+begin_src perl :results output
+#+end_src
+
+* Subroutines
+  A subroutine is a block of code that can be reusable across programs.
+  Perl subroutine is very flexible and powerful. You can define a subroutine anywhere in your program. 
+  If you have subroutines defined in another file, you can load them in your program by using the use, do or require statement.
+  You can call a subroutine directly or indirectly via a reference, a variable or an object.
+  Perl also allows you to create anonymous subroutines that can be accessible through references.
+
+** Syntax
+   To define a subroutine, you use the following syntax:
+#+begin_src perl
+   sub NAME PROTOTYPES ATTRIBUTES BLOCK
+#+end_src
+
+   For IAI context, we use a lighter form to declare a subroutine
+#+begin_src perl
+   sub NAME  BLOCK
+#+end_src
+
+#+begin_src perl :results output
+use warnings;
+use strict;
+
+sub say_something {
+  print "Hi, this is a subroutine\n";
+}
+
+# Different ways to call a subroutine
+&say_something;  # Optional '&'
+say_something(); # explicitly call a subroutine
+say_something;   # No parameters
+
+#+end_src
+
+#+RESULTS:
+: Hi, this is a subroutine
+: Hi, this is a subroutine
+: Hi, this is a subroutine
+
+  - The subroutines parameters are scalar only
+  - The parameters are ordered and anonymous
+  - You can access to the parameters through array : @_
+  - Subroutine can *return* a scalar, a list, an array, a hash, a pointer, ...
+
+** How-to write correctly a subroutine
+  #+begin_src perl :results output
+
+  sub display {
+    my %params=@_;
+    my $message=$params{-message};
+
+    print "$message\n";
+    return;
+  }
+
+  display(-message=>"bonjour");
+
+  #+end_src
+
+** Exercise
+  1.  Write subroutine you_can_drink with parameter age.
+    This subroutine return
+    - "fruit juice" if age is lesser than 18,
+    - "a tea" if age is greater than 85,
+    - "a beer" if age between 18 and 84
+    the main program display the result of you_can_drink(-age=>35)
+#+begin_src perl :results output
+
+#+end_src
+
+* References
+  A reference is a scalar variable that “points”  or refers to another object which can be a scalar, an array, a hash, etc.  
+  A reference holds a memory address of the object that it points to.
+  
+  When a reference is dereferenced, you can manipulate data of the object that the reference refers to.
+  The act of retrieving data through a reference is called dereferencing.
+
+  Perl reference is like C pointer.
+  Reference is an address memory to the data refered.
+  A reference is a scalar. 
+
+#+begin_src perl 
+
+# Referencing some variables
+my $ref_scal = \$scal;
+my $ref_tab = \@tab;
+my $ref_hash = \%hash;
+
+# Dereferencing
+my $scal = ${$ref_scal};
+my @tab = @{$ref_tab};
+my %hash = %{$ref_hash};
+
+#+end_src
+
+** Examples
+*** Arrays
+#+begin_src perl :results output
+use strict;
+use Data::Dumper; # lib to dump any perl data
+
+  print "Static Array\n";
+
+  print "1. Create an array\n";
+  my @tableau= (0,1,2,3);
+  print "   Array= @tableau \n";
+
+  print "2. Change a value\n";
+  $tableau[0]="I_change_a_value";
+  print "   Tableau= @tableau \n";
+
+  print "3. Get a value\n";
+  my $a=$tableau[1];
+  print "   a= $a\n";
+
+  print "\nArray ref\n";
+
+  print "1. Create an array ref\n";
+  my $tableau_ref= [ 0,1,2,3 ];
+  print "   Tableau_ref= $tableau_ref\n";
+  print "   Tableau_ref= [", join(', ', @$tableau_ref)." ]\n";
+
+  print "2. Change a value\n";
+  $tableau_ref->[0]="I_change_a_value";
+  print "   Tableau_ref= [", join(', ', @$tableau_ref)." ]\n";
+
+  print "3. Get a value\n";
+  my $a=$tableau_ref->[1];
+  print "   a= $a\n";
+
+  # Ref keyword
+  print "   REF type=".(ref $tableau_ref)."\n";
+
+exit 0;
+#+end_src
+
+*** Hash
+#+begin_src perl :results output
+use strict;
+use Data::Dumper;
+
+
+  print "Static Hash\n";
+  print "1. Create a HASH";
+  my %hash1= (k1=>'a', k2=>'b');
+  my %hash2= ('k1','a', 'k2','b');
+  print "   hash1 = %hash1 \n";
+  print "   hash1= ";
+  print "$_ => $hash1{$_}, " for (keys %hash1); print "\n";
+  print "   hash2= ";
+  print "$_ => $hash2{$_}, " for (keys %hash2); print "\n";
+
+  print "2. Change a value\n";
+  $hash1{k1} = 'c';
+  $hash1{k3} = 'a';
+  print "   hash1= ";
+  print "$_ => $hash1{$_}, " for (keys %hash1); print "\n";
+
+  print "3. Get a value\n";
+  my $a= $hash1{k1};
+  print "   a= $a\n";
+
+
+  print "\n\nRef a Hash\n";
+  print "1. Create a hash ref\n";
+  my $hash1_ref={k1=>'a', k2=>'b'};
+  my $hash2_ref={'k1','a', 'k2','b'};
+  print "   hash1_ref= ";
+  print "$_ => $hash1_ref->{$_}, " for (keys %$hash1_ref); print "\n";
+  print "   hash2_ref= ";
+  print "$_ => $hash2_ref->{$_}, " for (keys %$hash2_ref); print "\n";
+
+  print "2. Change a hash ref\n";
+  $hash1_ref->{k1} = 'c';
+  $hash1_ref->{k3} = 'a';
+  print "   hash1_ref= ";
+  print "$_ => $hash1_ref->{$_}, " for (keys %$hash1_ref); print "\n";
+
+  print "3. Delete a key/value pair\n";
+  delete $hash1_ref->{k2};
+  print "   hash1_ref= ";
+  print "$_ => $hash1_ref->{$_}, " for (keys %$hash1_ref); print "\n";
+
+  print "4. Get the value of a key\n";
+  my $a= $hash1_ref->{k1};
+  print "   a= $a\n";
+
+exit 0;
+#+end_src
+
+** Operators
+   ref
+   defined exists
+
+* Modules
+  Perl module is a reusable collection of related variables and subroutines that perform a set of programming tasks.
+
+#+begin_src sh :results output
+# Some details from perl
+perl -V
+#+end_src
+
+** Create a module
+
+#+begin_src perl
+package My::Module; # Package Name (::)
+
+use 5.010;
+use strict;
+use warnings;
+
+# Optionally we can control loading of a module
+BEGIN {
+    print "Chargement du module\n";
+}
+END {
+    print "Fin d'usage du module\n";
+}
+
+
+# Declare a subroutine
+sub myFunc {
+
+    # définition si appel prévu : My::Module::myFunc
+    my ($param) = @_;
+
+    # code
+    # ...
+
+    return;
+}
+
+1; # TRES important, ne pas oublier
+
+#+end_src
+
+   Technically we create the file Module.pm in the directory My.
+   
+** Use a module
+#+begin_src perl :results output
+
+use warnings;
+use strict;
+
+use JSON qw(encode_json decode_json); # load JSON.pm and use encode and decode subroutine
+
+my @data=(1,2,3,4);
+print "Json string of data = '".encode_json(\@data)."'\n";
+
+my $debug=1;
+if ($debug) {
+  require Data::Dumper; # load Data/Dumper.pm only if $debug is "true"
+  print "Data=".Data::Dumper::Dumper(\@data)."\n";
+}
+
+exit(0);
+
+#+end_src
+
+#+RESULTS:
+: Json data=[1,2,3,4]
+: Data=$VAR1 = [
+:           1,
+:           2,
+:           3,
+:           4
+:         ];
+: 
+
+
+** Exercice
+ - Create Module Car 
+   attribute :
+   - essence=10 (start to 10)
+   method:
+   - move: this subroutine decrement attribut essence.
+   - (optionnal) can_move: this subroutine return the value of essence.
+ 
+ - Create Module board
+   attribute:
+   - x, y for the position of the car
+   - fx, fy: final position
+   method:
+   - moveTo : change value of x,y accordingly to parameter direction (Nord,East,West,South)
+   - finish : the game is finish ? and what is its status ?
+   - display : display a board (4x4) with a car (C) and with X a mark representing the final position that we want the car to be
+
+      0..3
+
+0     C...
+.     ....
+.     ....
+3     ...X
+
+ - Create your main program which load module Board and ask to a user which direction the car must take on the board.
+
+* Object
+
+  There are three important rules in Perl object oriented programming:
+  1) A class is a package.
+  2) An object is a reference that knows its class.
+  3) A method is a subroutine.
+
+** Creation
+#+begin_src perl :results output
+package Vehicule;
+
+use strict;
+use warnings;
+
+# for construct the object we use a method named "new()"
+# usage: my $truck = Vehicule->new(6,'GREEN');
+sub new {
+  my ($class,$nbwheel,$color) = @_;
+  
+  my $this = {};
+  $this->{NB_WHEEL} = $nbwheel;
+  $this->{COLOR} = $color;
+
+  # The built-in function bless is used to bless the reference to the class and return an instance of the class.
+  return bless($this, $class);  # promote $this to an object
+}
+
+# fonction to change the color
+# $v1->rePaint(-color=>'BLUE');
+sub rePaint {
+  my $this=shift;
+  my %params=@_;
+
+  $this->{COLOR} = $params{-color};
+  return;
+}
+
+1;
+
+##
+# MAIN
+##
+use strict;
+use warnings;
+
+use Data::Dumper;
+
+my $truck = Vehicule->new(6,'GREEN');
+print  "##create truck=".Dumper($truck)."\n";
+
+$truck->{COLOR}='BLUE';
+$truck->{RECEPTION}=['TV','RADIO'];
+print  "##change truck=".Dumper($truck)."\n";
+
+$truck->rePaint(-color=>"BLACK");
+print  "##repaint truck=".Dumper($truck)."\n";
+
+exit 0;
+
+#+end_src
+
+#+RESULTS:
+#+begin_example
+##create truck=$VAR1 = bless( {
+                 'NB_WHEEL' => 6,
+                 'COLOR' => 'GREEN'
+               }, 'Vehicule' );
+
+##change truck=$VAR1 = bless( {
+                 'RECEPTION' => [
+                                  'TV',
+                                  'RADIO'
+                                ],
+                 'NB_WHEEL' => 6,
+                 'COLOR' => 'BLUE'
+               }, 'Vehicule' );
+
+##repaint truck=$VAR1 = bless( {
+                 'RECEPTION' => [
+                                  'TV',
+                                  'RADIO'
+                                ],
+                 'NB_WHEEL' => 6,
+                 'COLOR' => 'BLACK'
+               }, 'Vehicule' );
+
+#+end_example
+
+*** Inheritance
+#+begin_src perl :results output 
+# --- fichier Velo.pm ---
+package Velo;
+
+use strict;
+use warnings;
+
+# use inheritance
+use parent qw(Vehicule);
+
+# other way to do it
+#use Vehicule;
+#our @ISA = qw(Vehicule);
+
+sub new {
+   my ($class,$color,$nbspeed) = @_;
+   my $this = $class->SUPER::new( 2, $color );
+   $this->{NB_SPEED} = $nbspeed;
+   return bless($this,$class);
+}
+
+1;
+#+end_src
+
+** Exercise
+   1. Translate the module exercise to object with 2 cars.
+
+
+
+
+
+
+
+* TODO Error Handling
+  - La gestion de base :
+    Warnings : warn
+    Sortie en erreur : die
+  - La gestion moins "de base" :
+    #+begin_src perl 
+    use Carp;
+    #+end_src
+
+    - Fonctions et effets
+|         | Fatal | Backtrace |
+|---------+-------+-----------|
+| carp    | N     | N         |
+| cluck   | N     | Y         |
+| croak   | Y     | N         |
+| confess | Y     | Y         |
+
+  - Utilisation de eval et de son retour $@
+
+    #+begin_src perl :results output
+    eval {
+      my $a=[1,2,3];
+      #die "Je veux une erreur!!";
+      print "ne s'affichera pas\n";
+    };
+    my $error = $@;
+    if( $error ) {
+      print "une erreur: $error\n";
+    }
+    #+end_src
+
+    #+RESULTS:
+    : ne s'affichera pas
+
+* TODO Les variables standard de perl
+  http://articles.mongueurs.net/magazines/linuxmag52.html
+
+* TODO Les regex
+** Regex usuelles
+   my $maregex=qr//;
+   m//
+   s///
+   tr///
+
+** Binding
+
+** Liens
+   https://regex101.com/
+
+** Exercices
+
+   |                                       |                                                                       |
+   |---------------------------------------+-----------------------------------------------------------------------|
+   | has a 'q'                             | has an 'a' but not 'e'                                                |
+   | starts with a 'q'                     | has at least 2 consecutive vowels (a,e,i,o,u) like in the word "bear" |
+   | has 'th'                              | has at least 3 vowels                                                 |
+   | has an 'q' or a 'Q'                   | has at least 6 characters                                             |
+   | has a '*' in it                       | has at exactly 6 characters                                           |
+   | starts with an 'q' or an 'Q'          | all the words with either 'Bar' or 'Baz' in them                      |
+   | has both 'a' and 'e' in it            | all the rows with either 'apple pie' or 'banana pie' in them          |
+   | has an 'a' and somewhere later an 'e' | for each row print if it was apple or banana pie?                     |
+   | does not have an 'a'                  | Bonus: Print if the same word appears twice in the same line          |
+   | does not have an 'a' nor '            | Bonus: has a double character                                         |
+
+* TODO Les fichiers
+** Operateur de test sur fichier
+#+begin_src perl :results output
+my $file = "/usr/doc/perl";
+if( -f $file && -w $file ) { print "c'est un fichier et on peut le modifier\n"; }
+my $taille = -s $file;
+my $age = -M $file;
+#+end_src
+** Ouverture, lecture et fermeture
+#+begin_src perl :results output
+open($fd,'<','data.txt') or die("open: $!");
+
+while( defined( $l = <$fd> ) ) {
+   chomp $l;
+   print "$. : $l\n";
+}
+
+close $fd;
+#+end_src
+   *Perldoc print* pour l'ecriture de fichier
+   *Perldoc open* pour les modes d'ouverture de fichier
+
+
