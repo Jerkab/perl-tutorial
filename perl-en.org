@@ -1,14 +1,15 @@
 #+TITLE:  Initiation to Perl
 #+AUTHOR: Jerome SANCHEZ
-#+DATE: [2020-03-10 Tue]
+#+DATE: [2020-06-19 Fri]
 #+TODO: TODO WORKINGON | DONE CANCEL
+#+TODO: UPDATE MOVE EXPLAIN EXAMPLE |
 
 * Presentation
 ** A scripting language
 *** Dynamic language
-    Not strong type
-    Inference typing (operations determine data type)
-    Simple and easy to program and understand
+    Not strong type (string, integer...)
+    Inference typing (operations determine its data type)
+    Simple and easy to program and understand 
 
 *** No compilation require
     Interpreter read and translate the source code at runtime
@@ -32,26 +33,21 @@
 perl -e 'print "hello !\n"'
 #+end_src
 
-#+RESULTS:
-: hello !
 
 *** Running perl from a file
-    #+begin_src perl :shebang "#!/usr/local/bin/perl" :results output
-    use strict;
-    use warnings;
+#+begin_src perl :shebang "#!/usr/local/bin/perl" :results output
+use strict;
+use warnings;
 
-    # un commantaire
-    my $str="Hello";
-    print $str." World\n";
+# un commantaire
+my $str="Hello";
+print $str." World\n";
 
-    exit 0;
-    #+end_src
-
-    #+RESULTS:
-    : Hello World
+exit 0;
+#+end_src
 
 
-** Web ressource
+** Web ressources
 *** Learn Perl org
     https://learn.perl.org/tutorials/
 
@@ -264,18 +260,23 @@ qw(2020 "Mars" 10) # an other form to represent a list
     use warnings;
     use strict;
 
-    my @vide = ();                       # Empty array from list
-    my @t1 = (3,'chaine',"bonjour ici"); # Copy a list to an array
-    my ($a,$b,$c)=(3,'chaine',"bonjour ici"); # affectation of several values
-    $t1[1] = 4;                          # change second element
-    print "Tableau : @t1 \n";
+    my @empty = ();                       # Empty array from list
+    my @t1 = (3,'chaine',"hello here"); # Copy a list to an array
+    my ($a,$b,$c)=(3, 'string', "hello here"); # affectation of several values
 
+    print " Array : @t1 (before)\n";
+    $t1[1] = 4;                          # change second element
+    print " Array : @t1 (after)\n";
+
+    print "Copy array\n";
     my @t2 = (1,2);
+    print " Array : @t1 (before)\n";
     @t1 = @t2;
-    print "Tableau : @t1 \n";
-    my ($premier, $second)= @t1; # Affectation multiple
+    print " Array : @t1 (after)\n";
+    my ($premier, $second)= @t1; # multiple assignement
 
     my $count_t2 = scalar @t2; # get the number of element into an array
+    print 'Size of @t2 = '.$count_t2."\n";
 
     # Remove and append element at the head
     my @simple_array = (1,2,3);
@@ -292,12 +293,18 @@ qw(2020 "Mars" 10) # an other form to represent a list
     #+end_src
 
     #+RESULTS:
-    : Tableau : 3 4 bonjour ici 
-    : Tableau : 1 2 
-    : Simple array = 1 2 3 	 shift @simple_array = 1 	 Simple array = 2 3 
-    : Simple array = 1 2 3 	 unshift @simple_array,(-1,0) = 5 	 Simple array = -1 0 1 2 3 
-    : Simple array = 1 2 3 	 pop @simple_array = 3 	 Simple array = 1 2 
-    : Simple array = 1 2 3 	 push @simple_array,(4,5) = 5 	 Simple array = 1 2 3 4 5 
+    #+begin_example
+     Array : 3 chaine hello here (before)
+     Array : 3 4 hello here (after)
+    Copy array
+     Array : 3 4 hello here (before)
+     Array : 1 2 (after)
+    Size of @t2 = 2
+    Simple array = 1 2 3 	 shift @simple_array = 1 	 Simple array = 2 3 
+    Simple array = 1 2 3 	 unshift @simple_array,(-1,0) = 5 	 Simple array = -1 0 1 2 3 
+    Simple array = 1 2 3 	 pop @simple_array = 3 	 Simple array = 1 2 
+    Simple array = 1 2 3 	 push @simple_array,(4,5) = 5 	 Simple array = 1 2 3 4 5 
+    #+end_example
 
 **** Operator
     scalar
@@ -314,11 +321,11 @@ qw(2020 "Mars" 10) # an other form to represent a list
     Each Key in hash should be unique or else it will override your value, which was assigned previously.
 **** Affectation
    #+begin_src perl :results output
-   my %h;
-   my %h2 = ();
-   my %h3 = ( "Paul"  => "01.23.45.67.89",
+   my %h; # undef hash
+   my %h2 = (); # empty hash
+   my %h3 = ( "Paul" => "01.23.45.67.89",
           "Virginie" => "06.06.06.06.06",
-          "Pierre"   => "unknow ..." );
+          "Pierre" => "unknow ..." );
 
    my @t = ("Paul", "01.23.45.67.89", "Virginie",
          "06.06.06.06.06", "Pierre", "unknow ...");
@@ -329,11 +336,13 @@ qw(2020 "Mars" 10) # an other form to represent a list
    $h3{'Paul'}="01.23.45.67.00";
    print "Phone= ".$h3{'Paul'}."\n";
 
-   # Add a new key/value pir
+   # Add a new key/value pair
    $h3{'Arnaud'}="09.87.65.43.21";
 
-   # Remoe a single ke/vcalue pair
+   # Remove a single key/value pair
    delete $h3{'Paul'};
+
+   my @array_keys = keys %h3;
 
    #+end_src
 
@@ -380,12 +389,18 @@ qw(2020 "Mars" 10) # an other form to represent a list
 
     In Perl, the *for* and *foreach* loop are interchangeable, therefore, you can use the *foreach* keyword in where you use the *for* keyword.
 
-   #+begin_src perl :results output
+#+begin_src perl
+    # Template form for for and foreach statement
+    LABEL for (EXPR; EXPR; EXPR) BLOCK  # usefull
+    LABEL foreach VAR (LIST) BLOCK # usefull
+#+end_src
+
+#+begin_src perl :results output
    # for C-like style
    for( my $i=0; $i<=20; $i+=2 ) {
      print "$i\n";
    }
-   #+end_src
+#+end_src
 
    #+begin_src perl :results output
    my @a = ('a','b','c','d');
@@ -395,19 +410,35 @@ qw(2020 "Mars" 10) # an other form to represent a list
    #+end_src
 
    #+begin_src perl :results output
+
    my %h = (1=>'a',2=>'b',3=>'c',4=>'d');
-   foreach my $index (keys %h) {
-     print "$h{$index}\n";
+   
+   print "All keys = ".join(', ',sort keys %h);
+   print "\n";
+   
+   foreach my $k (sort keys %h) {
+     print "value = $h{$k}\n";
    }
    #+end_src
 
-** while
+*** while
    The Perl while loop statement executes a code block repeatedly as long as the test condition remains true.
    The test condition is checked at the beginning of each iteration.
    
    If the condition evaluates to true, the code block inside while loop executes. 
    At the beginning of each iteration, the condition is reevaluated.
    The loop is terminated if the condition evaluates to false.
+
+#+begin_src perl
+    # Template from for while statement
+    LABEL while (EXPR) BLOCK
+    LABEL while (EXPR) BLOCK continue BLOCK
+
+    LABEL do BLOCK while (EXPR);
+
+    LABEL until (EXPR) BLOCK
+    LABEL until (EXPR) BLOCK continue BLOCK
+#+end_src
 
    #+begin_src perl :results output
    my $i = 0;
@@ -428,12 +459,100 @@ qw(2020 "Mars" 10) # an other form to represent a list
    } while( $i <= 20 );
    #+end_src
 
-** Break a loop
+   #+begin_src perl :results output
+   my %h = (1=>'a',2=>'b',3=>'c',4=>'d');
+
+   # looping example with "each" operator
+   print "Looping with each operator\n";
+   while (my ($k,$v) = each %h) {
+    print "Key = $k,\tValue=$v\n";   
+    print "value using \%h = $h{$k}\n";
+   }
+   #+end_src
+*** Break a loop
    - next : next element
    - last : quit 
    - redo : reprocess 
+   - goto : jump to a label (beware it's could injure your health mentality)
 
-** Exercises
+#+begin_src perl :results output
+   # Example 
+   my $i = 0;
+   my %h=(1 => 'a');
+   LABEL: 
+       while( $i <= 20 ) {
+        print "$i\n";
+        LABEL_HASH: foreach my $k (keys %h) {
+            if ($i > 15) {
+              print "Here with i = $i\n";
+              $i+=2;
+              goto LABEL;
+            }
+            print " keys = $k\t Value=$h{$k}\n";
+        }
+        $i+=2;
+       }
+#+end_src
+
+#+RESULTS:
+#+begin_example
+0
+ keys = 1	 Value=a
+2
+ keys = 1	 Value=a
+4
+ keys = 1	 Value=a
+6
+ keys = 1	 Value=a
+8
+ keys = 1	 Value=a
+10
+ keys = 1	 Value=a
+12
+ keys = 1	 Value=a
+14
+ keys = 1	 Value=a
+16
+Here with i = 16
+18
+Here with i = 18
+20
+Here with i = 20
+#+end_example
+
+
+#+begin_src perl :results output
+my $already_work=0; # prevent infinite loop when $i equals 4, because we redo it without incrementation
+for( my $i=0; $i<=20; $i++ ) {
+ if ($i == 4 && !$already_work) {
+     $already_work=1;
+     print "$i\n";
+     redo;
+ }
+ next if ($i %2); # only even
+ last if ($i>15); # quit if $i>15
+ print "$i\n";
+}
+
+print "already_work=$already_work\n";
+#+end_src
+
+#+RESULTS:
+#+begin_example
+0
+2
+4
+4
+6
+8
+10
+12
+14
+already_work=1
+#+end_example
+
+
+*** Exercises
    - Print all results for (1..9) * 7
 #+begin_src perl :results output
 #+end_src
@@ -447,7 +566,7 @@ qw(2020 "Mars" 10) # an other form to represent a list
 * Subroutines
   A subroutine is a block of code that can be reusable across programs.
   Perl subroutine is very flexible and powerful. You can define a subroutine anywhere in your program. 
-  If you have subroutines defined in another file, you can load them in your program by using the use, do or require statement.
+  If you have subroutines defined in another file, you can load them in your program by using the *use*, *do* or *require* statement.
   You can call a subroutine directly or indirectly via a reference, a variable or an object.
   Perl also allows you to create anonymous subroutines that can be accessible through references.
 
@@ -486,6 +605,30 @@ say_something;   # No parameters
   - The parameters are ordered and anonymous
   - You can access to the parameters through array : @_
   - Subroutine can *return* a scalar, a list, an array, a hash, a pointer, ...
+
+#+begin_src perl :results output
+use warnings;
+use strict;
+
+sub say_something {
+  #@_
+  my @a=@_;
+  foreach my $v (@a) {
+    print "Parameter = $v\n";  
+  }
+  
+  print "Parameter first = $a[0]\n";
+}
+
+say_something (1,2,3);
+
+#+end_src
+
+#+RESULTS:
+: Parameter = 1
+: Parameter = 2
+: Parameter = 3
+: Parameter first = 1
 
 ** How-to write correctly a subroutine
   #+begin_src perl :results output
@@ -547,34 +690,34 @@ use Data::Dumper; # lib to dump any perl data
   print "Static Array\n";
 
   print "1. Create an array\n";
-  my @tableau= (0,1,2,3);
-  print "   Array= @tableau \n";
+  my @array= (0,1,2,3);
+  print "   Array= @array \n";
 
   print "2. Change a value\n";
-  $tableau[0]="I_change_a_value";
-  print "   Tableau= @tableau \n";
+  $array[0]="I_change_a_value";
+  print "   Array= @array \n";
 
   print "3. Get a value\n";
-  my $a=$tableau[1];
+  my $a=$array[1];
   print "   a= $a\n";
 
   print "\nArray ref\n";
 
   print "1. Create an array ref\n";
-  my $tableau_ref= [ 0,1,2,3 ];
-  print "   Tableau_ref= $tableau_ref\n";
-  print "   Tableau_ref= [", join(', ', @$tableau_ref)." ]\n";
+  my $array_ref= [ 0,1,2,3 ];
+  print "   Array_ref= $array_ref\n";
+  print "   Array_ref= [", join(', ', @$array_ref)." ]\n";
 
   print "2. Change a value\n";
-  $tableau_ref->[0]="I_change_a_value";
-  print "   Tableau_ref= [", join(', ', @$tableau_ref)." ]\n";
+  $array_ref->[0]="I_change_a_value";
+  print "   Array_ref= [", join(', ', @$array_ref)." ]\n";
 
   print "3. Get a value\n";
-  my $a=$tableau_ref->[1];
+  my $a=$array_ref->[1];
   print "   a= $a\n";
 
   # Ref keyword
-  print "   REF type=".(ref $tableau_ref)."\n";
+  print "   REF type=".(ref $array_ref)."\n";
 
 exit 0;
 #+end_src
@@ -630,7 +773,10 @@ use Data::Dumper;
   my $a= $hash1_ref->{k1};
   print "   a= $a\n";
 
-exit 0;
+
+  # Ref keyword
+  print "   REF type=".(ref $hash_ref)."\n";
+
 #+end_src
 
 ** Operators
@@ -639,6 +785,7 @@ exit 0;
 
 * Modules
   Perl module is a reusable collection of related variables and subroutines that perform a set of programming tasks.
+  Only 1 instance of the attributes module
 
 #+begin_src sh :results output
 # Some details from perl
@@ -650,23 +797,27 @@ perl -V
 #+begin_src perl
 package My::Module; # Package Name (::)
 
-use 5.010;
 use strict;
 use warnings;
 
+use Text::CSV;  # you could use other package
+
+# optionnaly if you want to use the function automatically (beware name conflict)
+# use Exporter;
+# our @EXPORT=qw(myfunc);
+
 # Optionally we can control loading of a module
 BEGIN {
-    print "Chargement du module\n";
+    print "Dynamic loading module part\n";
 }
 END {
-    print "Fin d'usage du module\n";
+    print "Realasing module part\n";
 }
-
 
 # Declare a subroutine
 sub myFunc {
 
-    # définition si appel prévu : My::Module::myFunc
+    # 
     my ($param) = @_;
 
     # code
@@ -675,12 +826,28 @@ sub myFunc {
     return;
 }
 
-1; # TRES important, ne pas oublier
+1; # Very important ! don't forget it at the end of your package declaration
 
 #+end_src
 
    Technically we create the file Module.pm in the directory My.
-   
+   And we can call them module function like this:
+
+#+begin_src perl
+ use My::Module;
+ My::Module::myFunc(@params); # if not exported
+#+end_src
+
+#+begin_src perl
+ use My::Module qw(myFunc); # with explicit name function we want
+ myFunc(@params);
+#+end_src
+
+#+begin_src perl
+ require My::Module;
+ My::Module::myFunc(@params); # require don't have exported functions
+#+end_src
+
 ** Use a module
 #+begin_src perl :results output
 
@@ -714,39 +881,84 @@ exit(0);
 
 
 ** Exercice
- - Create Module Car 
-   attribute :
-   - essence=10 (start to 10)
-   method:
-   - move: this subroutine decrement attribut essence.
-   - (optionnal) can_move: this subroutine return the value of essence.
- 
- - Create Module board
-   attribute:
-   - x, y for the position of the car
-   - fx, fy: final position
-   method:
-   - moveTo : change value of x,y accordingly to parameter direction (Nord,East,West,South)
-   - finish : the game is finish ? and what is its status ?
-   - display : display a board (4x4) with a car (C) and with X a mark representing the final position that we want the car to be
+   Write a package with a function:  SUM(a,b) = a+b
+   And write a main program that use the function SUM
 
-      0..3
-
-0     C...
-.     ....
-.     ....
-3     ...X
-
- - Create your main program which load module Board and ask to a user which direction the car must take on the board.
-
-* Object
-
+* Object (blessing)
   There are three important rules in Perl object oriented programming:
   1) A class is a package.
   2) An object is a reference that knows its class.
   3) A method is a subroutine.
 
 ** Creation
+
+#+begin_src perl :results output
+package A;
+
+sub new {
+    my $self={};
+    $self->{'attribut'}="A";
+    print "Ref Self = ".ref($self)."\n";
+    $self=bless($self, "A");
+    print "Ref Self = ".ref($self)."\n";
+    return $self;
+}
+
+sub dosomething {
+    print "An output from A";
+}
+1; ## End of package A
+
+package B;
+
+sub new {
+    my $self={};
+    $self->{'attribut'}="B";
+    print "Ref Self = ".ref($self)."\n";
+    $self=bless($self, "B");
+    print "Ref Self = ".ref($self)."\n";
+    return $self;
+}
+
+sub dosomething {
+    print "An output from B";
+}
+1; ## End of package B
+
+use strict;
+use warnings;
+use Data::Dumper;
+
+my $variable=A->new();
+$variable->dosomething();
+print "\nDump variable=".Dumper($variable)."\n";
+
+#$variable=B->new();
+bless($variable,"B");
+$variable->dosomething();
+print "\nDump variable=".Dumper($variable)."\n";
+
+exit 0;
+
+#+end_src
+
+#+RESULTS:
+#+begin_example
+Ref Self = HASH
+Ref Self = A
+An output from A
+Dump variable=$VAR1 = bless( {
+                 'attribut' => 'A'
+               }, 'A' );
+
+An output from B
+Dump variable=$VAR1 = bless( {
+                 'attribut' => 'A'
+               }, 'B' );
+
+#+end_example
+
+**** Example
 #+begin_src perl :results output
 package Vehicule;
 
@@ -757,7 +969,7 @@ use warnings;
 # usage: my $truck = Vehicule->new(6,'GREEN');
 sub new {
   my ($class,$nbwheel,$color) = @_;
-  
+
   my $this = {};
   $this->{NB_WHEEL} = $nbwheel;
   $this->{COLOR} = $color;
@@ -827,6 +1039,9 @@ exit 0;
 
 #+end_example
 
+
+
+
 *** Inheritance
 #+begin_src perl :results output 
 # --- fichier Velo.pm ---
@@ -844,6 +1059,7 @@ use parent qw(Vehicule);
 
 sub new {
    my ($class,$color,$nbspeed) = @_;
+   # $class is equal to "Velo"
    my $this = $class->SUPER::new( 2, $color );
    $this->{NB_SPEED} = $nbspeed;
    return bless($this,$class);
@@ -853,62 +1069,232 @@ sub new {
 #+end_src
 
 ** Exercise
-   1. Translate the module exercise to object with 2 cars.
-
-
-
-
-
-
-
-* TODO Error Handling
-  - La gestion de base :
+  1. *easy* Implement a LIFO Stack (last info first out)
+     we need the functions:
+     - empty : stack is empty
+     - push  : add an element
+     - pop   : retrieve the last element
+  2. *hard* Implement the Hanoi tower with 3 LIFO stack 
+     
+* Error Handling
+  - Bacis tools:
     Warnings : warn
-    Sortie en erreur : die
-  - La gestion moins "de base" :
-    #+begin_src perl 
-    use Carp;
-    #+end_src
+    Fatal error : die
 
-    - Fonctions et effets
-|         | Fatal | Backtrace |
-|---------+-------+-----------|
-| carp    | N     | N         |
-| cluck   | N     | Y         |
-| croak   | Y     | N         |
-| confess | Y     | Y         |
+  - Auxiliary Library *Carp* :
 
-  - Utilisation de eval et de son retour $@
+#+begin_src perl 
+use Carp qw(cluck);
+
+carp "Message";
+cluck "Message";
+croak "Message";
+confess "Message";
+
+#+end_src
+
+    - Functions and impacts
+      Fatal => exit program
+      Stack => print the stack function call of the program
+
+|         | Fatal | Stacktrace |
+|---------+-------+------------|
+| carp    | N     | N          |
+| cluck   | N     | Y          |
+| croak   | Y     | N          |
+| confess | Y     | Y          |
+
+
+  - Reserved word *eval* and message *$@*
 
     #+begin_src perl :results output
     eval {
       my $a=[1,2,3];
-      #die "Je veux une erreur!!";
-      print "ne s'affichera pas\n";
+      die "I want to stop!!";
+      print "A invisible message\n";
     };
+
     my $error = $@;
     if( $error ) {
-      print "une erreur: $error\n";
+      print "Error message: $error\n";
     }
     #+end_src
 
     #+RESULTS:
-    : ne s'affichera pas
+    : Error message: I want to stop!! at - line 3.
 
-* TODO Les variables standard de perl
-  http://articles.mongueurs.net/magazines/linuxmag52.html
+     
+** Simulate Exception handling with Try::tiny
+#+begin_src perl
+use Try::Tiny;
 
-* TODO Les regex
-** Regex usuelles
+try {
+  print "some actions\n";
+  die "An error occur";
+}
+catch {
+  my $error = $_;
+  print "Exception captured: $error\n";
+}
+; # don't forget ';' to the end of catch statement
+
+print "I do other actions\n":
+#+end_src
+
+
+* Global standard variables
+  [[https://perldoc.perl.org/perlvar.html][perlvar]] (english site)
+
+  $_ current value
+  @_ array of sub program parameter
+
+#+begin_src perl :results output
+
+foreach ('a'..'d') {
+  print; # like: print $_;
+  print "\n";
+  print "With \$_ = ". $_ ."\n";
+}
+
+print "\n============\n";
+sub f {
+  print "Parameters = ".join(', ',@_)."\n";
+  print "Parameter 2 = ".$_[1]."\n";
+}
+
+f(1,2,3,4);
+
+#+end_src
+
+
+
+  @ARGV command line parameter
+#+begin_src shell :results output
+perl -e 'foreach (@ARGV) { print $_; print ", ";}' 1 2 3 4
+#+end_src
+
+#+RESULTS:
+: 1, 2, 3, 4, 
+
+  $0 program name
+  $$ current pid
+  %ENV environment variables
+  @INC path of libs perl
+
+#+begin_src shell :results output
+perl -e 'print "progname= $0 \t PID= $$ \t User= $ENV{USER} \nPerl path libs= @INC \n";'
+#+end_src
+
+#+RESULTS:
+: progname= -e 	 PID= 11927 	 User= jsa 
+:  Perl path libs= /usr/local/libdata/perl5/site_perl/i386-openbsd /usr/local/libdata/perl5/site_perl /usr/libdata/perl5/i386-openbsd /usr/libdata/perl5 
+
+* REGular EXpressions
+** Perl Regex Tutorial site
+   [[https://perldoc.perl.org/perlretut.html][Perl Regex Tutorial]]
+   [[https://perldoc.perl.org/perlrequick.html][Perl regular expressions quick start]]
+   [[https://perldoc.perl.org/perlre.html][perlre - Perl regular expressions]]
+
+   Testing regex site: https://regex101.com/
+
+** Rules
+   Qualifier
+   Quantifier
+   Grouping
+
+** Frequentally used Regex operator
+   =~
+   !~ 
+   m//  m%% m{} m() 
+   s///  s%%% s{}{} s()()
+   tr/// 
+#+begin_src perl :results output
+if ("text" =~ m/ex/) {
+  print "text contains 'ex'\n";
+}
+my $test='a short text';
+$test =~ s/short/long/;
+print "Test = $test\n";
+$test =~ tr/t/p/;
+print "Test = $test\n";
+
+#+end_src
+
+#+RESULTS:
+: text contains 'ex'
+: Test = a long text
+: Test = a long pexp
+
+
+*** Regex like a variable
    my $maregex=qr//;
-   m//
-   s///
-   tr///
+#+begin_src perl :results output
+my $regex=qr(ex);
 
-** Binding
+if ("text" =~ m/$regex/) {
+  print "text contains $regex\n";
+}
+#+end_src
 
-** Liens
-   https://regex101.com/
+#+RESULTS:
+: text contains (?^:ex)
+
+
+** Capture Group 
+    capturing value from regex
+
+#+begin_src perl :results output
+my @urls=( "www.google.com",
+  "http://www.google.com",
+  "http://www.google.com/",
+  "http://www.google.com/api/search?q=1");
+
+foreach my $url (@urls) {
+  print "URL= $url\n";
+  if ( $url =~ m%((http|https)://)?([\w|.|-]+)(/(.*)\?(.*))?% ) {
+    my $proto=$1;
+    print "Protocol= $1 - $2\n";
+    print "FQDN= $3\n";
+    print "Full Path= $4\n";
+    print "Path = $5\n";
+    print "Parameter = $6\n";
+  }
+  print "\n";
+}
+
+#+end_src
+
+#+RESULTS:
+#+begin_example
+URL= www.google.com
+Protocol=  - 
+FQDN= www.google.com
+Full Path= 
+Path = 
+Parameter = 
+
+URL= http://www.google.com
+Protocol= http:// - http
+FQDN= www.google.com
+Full Path= 
+Path = 
+Parameter = 
+
+URL= http://www.google.com/
+Protocol= http:// - http
+FQDN= www.google.com
+Full Path= 
+Path = 
+Parameter = 
+
+URL= http://www.google.com/api/search?q=1
+Protocol= http:// - http
+FQDN= www.google.com
+Full Path= /api/search?q=1
+Path = api/search
+Parameter = q=1
+
+#+end_example
 
 ** Exercices
 
@@ -925,26 +1311,41 @@ sub new {
    | does not have an 'a'                  | Bonus: Print if the same word appears twice in the same line          |
    | does not have an 'a' nor '            | Bonus: has a double character                                         |
 
-* TODO Les fichiers
-** Operateur de test sur fichier
+* Files Handling
+** Operator to check a file
+   [[https://perldoc.perl.org/functions/-X.html][File test operato]]
+
 #+begin_src perl :results output
 my $file = "/usr/doc/perl";
-if( -f $file && -w $file ) { print "c'est un fichier et on peut le modifier\n"; }
-my $taille = -s $file;
+if( -f $file && -w $file ) { print "This is a file and we can write it\n"; }
+my $size = -s $file;
 my $age = -M $file;
 #+end_src
-** Ouverture, lecture et fermeture
+** Open, read, write, close
 #+begin_src perl :results output
-open($fd,'<','data.txt') or die("open: $!");
 
+# All the finle into an array
+open(my $fd,'<','data.txt') or die("open: $!");
+# data.txt "a\nb"
+# $all_file[0]='a';
+# $all_file[1]='b';
+
+my @all_file = <$fd>;
 while( defined( $l = <$fd> ) ) {
    chomp $l;
    print "$. : $l\n";
 }
-
 close $fd;
+
+# Line by line
+open(my $fh, '<', 'data.txt') or warn "Can't open $arg: $!";
+while ( ! eof($fh) ) {
+    defined( $_ = readline $fh )
+         or die "readline failed for $arg: $!";
+            ...
+}
+close $fh;
 #+end_src
-   *Perldoc print* pour l'ecriture de fichier
-   *Perldoc open* pour les modes d'ouverture de fichier
 
-
+   Write stream out *Perldoc print*
+   File open mode *Perldoc open*
